@@ -2,6 +2,7 @@
 import requests as re
 from bs4 import BeautifulSoup as bs
 import feedparser
+import json
 
 URL = "https://techcrunch.com/feed"
 
@@ -47,7 +48,9 @@ def get_article_text(url):
 
 if __name__ == '__main__':
     articles = get_data(URL)
-    
+    articles_json = json.dumps(articles, indent=4)
+    with open('articles.json', 'w') as f:
+        f.write(articles_json)
 """
 articles: List[dict] - A list of article dictionaries
 
