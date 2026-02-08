@@ -1,4 +1,9 @@
 import Groq from "groq-sdk";
+import * as jsonData from './articles.json';
+import * as fs from 'node:fs';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -13,7 +18,9 @@ Format your response as JSON with this structure:
 {
   "summary": "Brief 2-3 sentence summary",
   "keyPoints": ["point 1", "point 2", "point 3"]
-}`;
+}
+  
+If the user asks additional questions, you can provide additional information as long as it is relevant to the article.`;
 
 interface Article {
     title: string;
@@ -30,6 +37,12 @@ interface ArticleSummary {
     keyPoints: string[];
 }
 
+// reading json file
+const articles: Article[] = JSON.parse(
+    fs.readFileSync('./articles.json', 'utf8')
+);      
+
+
 // summarizing single article
 export async function summarizeArticle(article: Article): Promise<ArticleSummary> {
     const content = article.text || article.summary;
@@ -42,7 +55,7 @@ export async function summarizeArticle(article: Article): Promise<ArticleSummary
             },
             {
                 role: "user",
-                content: `Summarize the following article: ${content}`
+                content: `Summarize the following article: ${content}`,
             }
 
         ],
@@ -60,3 +73,12 @@ export async function summarizeArticle(article: Article): Promise<ArticleSummary
         keyPoints: result.keyPoints || []
     }
 }
+
+async function main() {
+    for (const article of articles) {
+        const summary = await summarizeArticle(article);
+        console.log(summary);
+    }
+}
+
+main();

@@ -2,6 +2,11 @@
   "dependencies": {
     "@photon-ai/imessage-kit": "^2.1.2",
     "better-sqlite3": "^12.6.2",
+    "dotenv": "^17.2.4",
     "groq-sdk": "^0.37.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.2.2",
+    "tsx": "^4.21.0"
   }
 }
